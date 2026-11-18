@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="vi"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Yên Tâm Học · 安心して学ぶ</title>
+<style>
+:root{--bg:#eef6fc;--card:#fff;--ink:#1d3557;--sub:#566b88;--blue:#4a90d9;--blue2:#dbeafb;--green:#3dae7a;--green2:#dff5ea;--sh:0 6px 20px rgba(74,144,217,.15)}
+*{box-sizing:border-box}
+body{margin:0;background:#dfeaf5;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans JP",sans-serif;color:var(--ink)}
+#app{max-width:420px;min-height:100vh;margin:0 auto;background:var(--bg);position:relative;overflow:hidden}
+.screen{display:none;min-height:100vh;padding:56px 20px 84px;flex-direction:column;gap:14px}
+.screen.on{display:flex;animation:in .35s ease}
+@keyframes in{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:none}}
+.vi{display:block;font-size:16px;font-weight:600;line-height:1.35}
+.ja{display:block;font-size:13px;color:var(--sub);font-weight:400;line-height:1.35;margin-top:2px}
+.big .vi{font-size:24px;font-weight:700}.big .ja{font-size:15px}.big .sm .vi{font-size:15px;font-weight:400}.big .sm .ja{font-size:13px}
+.center{text-align:center}
+.card{background:var(--card);border-radius:22px;padding:16px;box-shadow:var(--sh)}
+.card.tap{cursor:pointer;display:flex;gap:14px;align-items:center;transition:transform .15s}
+.card.tap:active{transform:scale(.97)}
+.ico{font-size:38px;width:62px;height:62px;border-radius:18px;background:var(--blue2);display:flex;align-items:center;justify-content:center;flex:none}
+.ico.g{background:var(--green2)}
+.btn{border:0;border-radius:18px;padding:16px;font-size:16px;cursor:pointer;background:var(--blue);color:#fff;box-shadow:var(--sh);width:100%}
+.btn .vi{font-size:17px}.btn .ja{color:#e6f1fc}
+.btn.g{background:var(--green)}.btn.g .ja{color:#e3f7ec}
+.btn:active{transform:scale(.98)}
+.link{background:none;border:0;cursor:pointer;color:var(--blue);padding:8px;text-align:center;width:100%}
+.link .ja{color:var(--sub)}
+.sp{flex:1}
+.art{font-size:80px;text-align:center;margin:6px 0}
+.reset{position:absolute;bottom:14px;left:0;right:0;text-align:center}
+.reset button{background:#fff;border:1px solid #c9d8e8;border-radius:999px;padding:10px 18px;font-size:14px;color:#566b88;cursor:pointer}
+.reset .vi{display:inline;font-size:14px;font-weight:500}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:2px solid var(--blue2);background:#fff;border-radius:999px;padding:8px 14px;cursor:pointer;font-size:14px;color:var(--ink)}
+.chip.on{background:var(--blue);border-color:var(--blue);color:#fff}.chip.on .ja{color:#e6f1fc}
+.chip .vi{font-size:14px}
+input[type=time]{font-size:22px;padding:10px 14px;border-radius:14px;border:2px solid var(--blue2);color:var(--ink);background:#fff}
+.row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.x{border:0;background:#eef2f7;border-radius:50%;width:34px;height:34px;cursor:pointer;color:var(--sub);font-size:16px}
+.err{background:#fff4e0;color:#8a5a00;border-radius:14px;padding:12px;display:none}
+.tt{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #eef2f7;font-size:14px}
+.tt:last-child{border:0}
+.banner{background:var(--green2);border:2px solid #b8e6cf;color:#1f6b49;border-radius:20px;padding:14px;animation:in .5s}
+.banner .ja{color:#4d9a76}
+.status{display:flex;gap:12px;align-items:center}
+.status.ok{background:var(--green2)}
+.sim{margin-top:auto;border:1px dashed #c9d8e8;border-radius:16px;padding:10px;text-align:center;opacity:.8}
+.sim .vi{font-size:12px;font-weight:400;color:var(--sub)}.sim .ja{font-size:11px}
+.sim button{margin-top:6px;border:1px solid #c9d8e8;background:#fff;border-radius:12px;padding:6px 10px;color:var(--sub);cursor:pointer}
+.sim button .vi{font-size:12px}
+/* A4 lock screen */
+#A4{background:linear-gradient(160deg,#1b2a4a,#3b5b8c);color:#fff;align-items:center;padding-top:70px}
+#A4 .clock{font-size:76px;font-weight:200;letter-spacing:2px}
+#A4 .date{opacity:.8;margin-bottom:30px}
+.notif{width:100%;background:rgba(255,255,255,.92);color:#1d3557;border-radius:22px;padding:14px;cursor:pointer;animation:drop .7s cubic-bezier(.2,1.2,.4,1);box-shadow:0 10px 30px rgba(0,0,0,.3)}
+@keyframes drop{from{transform:translateY(-140px);opacity:0}to{transform:none;opacity:1}}
+.nh{display:flex;gap:8px;align-items:center;font-size:12px;color:#5b6f8a;margin-bottom:6px}
+.nh b{flex:1}.nh .vi{display:inline;font-size:12px}
+.hint{margin-top:18px;opacity:.75;text-align:center}.hint .ja{color:#c5d3e8}
+#A4 .reset button{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.35);color:#e6eefb}
+/* A5 */
+.tabs{display:flex;gap:8px}.tab{flex:1;padding:10px;border-radius:14px;border:0;background:#fff;cursor:pointer;font-weight:700;color:var(--sub)}
+.tab.on{background:var(--blue);color:#fff}
+.msg{display:flex;gap:10px;margin-bottom:12px}.av{width:38px;height:38px;border-radius:50%;background:var(--blue2);display:flex;align-items:center;justify-content:center;flex:none}
+.msg b{font-size:13px}.msg p{margin:3px 0 0;font-size:14px;line-height:1.4}
+.fix{position:sticky;bottom:70px;margin-top:auto}
+/* B */
+.task{cursor:pointer;display:block}.task.done{opacity:.5}
+.meta{font-size:12px;color:var(--sub);margin-top:6px}
+.tag{display:inline-block;font-size:11px;border-radius:8px;padding:3px 8px;background:var(--blue2);color:var(--blue)}
+.tag.d{background:var(--green2);color:var(--green)}
+.toast{position:fixed;bottom:92px;left:50%;transform:translateX(-50%);background:#1d3557;color:#fff;border-radius:14px;padding:10px 14px;max-width:360px;font-size:13px;display:none;z-index:9}
+.toast .ja{color:#c5d3e8}
+.bar{height:14px;background:#e3edf7;border-radius:9px;overflow:hidden}.fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--green));border-radius:9px;transition:width 1.2s ease}
+.check{width:110px;height:110px;border-radius:50%;background:var(--green);color:#fff;font-size:64px;display:flex;align-items:center;justify-content:center;margin:10px auto;animation:pop .6s cubic-bezier(.2,1.4,.4,1)}
+@keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
+.xp{font-size:34px;font-weight:800;color:var(--green);text-align:center;animation:bounce .8s .3s both}
+@keyframes bounce{0%{transform:translateY(20px);opacity:0}60%{transform:translateY(-10px);opacity:1}100%{transform:none}}
+.chart{display:flex;align-items:flex-end;gap:12px;height:140px;padding-top:10px}
+.col{flex:1;text-align:center;font-size:12px;display:flex;flex-direction:column;justify-content:flex-end;height:100%}
+.col i{display:block;background:var(--blue2);border-radius:8px 8px 0 0;transition:height 1s}.col.me i{background:var(--green)}
+.badge{display:flex;gap:12px;align-items:center;margin-bottom:10px}.badge.lock{opacity:.55}
+.badge .ico{font-size:28px;width:52px;height:52px}
+h3{margin:0 0 8px}h3 .vi{font-size:15px}
+#lang{position:absolute;top:12px;right:14px;z-index:6;display:flex;background:rgba(255,255,255,.92);border-radius:999px;padding:3px;box-shadow:var(--sh)}
+#lang button{border:0;background:none;border-radius:999px;padding:6px 12px;font-size:13px;font-weight:700;color:var(--sub);cursor:pointer}
+#lang button.on{background:var(--blue);color:#fff}
+.tag.n{background:#eef2f7;color:#566b88}
+#hid{position:absolute;top:0;left:0;width:56px;height:56px;z-index:7}
+.slot input[type=time]{display:block;width:100%;margin-top:6px;font-size:30px}.weekdays{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}.weekdays .chip{padding:10px 0;border-radius:12px;font-weight:600}.quick{display:flex;margin-top:6px}.quick .link{font-size:12px}.task-form{display:flex;flex-direction:column;gap:15px}.task-form label{display:flex;flex-direction:column;gap:7px;font-size:14px;font-weight:600}.task-form input,.task-form select,.task-form textarea{font:inherit;width:100%;min-width:0;border:2px solid var(--blue2);border-radius:12px;padding:12px;background:white;color:var(--ink)}.task-form textarea{resize:vertical}.task,.big,.tt{overflow-wrap:anywhere}.msg p{white-space:pre-wrap}button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #2169ac;outline-offset:3px}.btn.outline{background:transparent;border:1.5px solid var(--blue);color:var(--blue);box-shadow:none;padding:12px}.btn.outline .vi{font-size:15px}.quick{gap:12px;margin-top:9px}.quick .link{width:auto;padding:3px 0;font-size:12px}.slot{padding:14px}.slot .row{margin-bottom:12px}.slot input[type=time]{font-size:26px;padding:8px 12px}.group-title{font-size:14px;color:var(--sub);margin:10px 2px 0;font-weight:700}.channel-step{display:flex;gap:12px;align-items:center;margin:12px 0}.channel-step .ico{width:42px;height:42px;font-size:22px}.sample-preview{border:1px solid #ccdaea;border-radius:16px;padding:12px;background:rgba(255,255,255,.55)}.sample-preview summary{cursor:pointer;font-size:13px;color:var(--sub);font-weight:600}.sample-preview[open] summary{margin-bottom:14px}.sample-preview .card{margin-top:12px;box-shadow:none}.channel-step .vi{font-size:15px}</style></head><body>
+<div id="app"></div>
+<div class="toast" id="toast"></div>
+<script>
+/* ===== DỮ LIỆU MẪU / SAMPLE DATA (sửa tại đây) ===== */
+const APP_NAME=["Yên Tâm Học","安心して学ぶ"];
+// Thời khóa biểu mẫu: day = getDay() (1=T2 ... 5=T6); remind = 30 phút trước tiết đầu
+const TKB=[{d:1,n:"T2",cls:"Mạng máy tính",j:"コンピュータネットワーク",at:"07:00",rm:"06:30"},{d:2,n:"T3",cls:"Thực hành Lập trình mạng",j:"ネットワークプログラミング実習",at:"12:30",rm:"12:00"},{d:3,n:"T4",cls:"Cấu trúc dữ liệu",j:"データ構造",at:"09:00",rm:"08:30"},{d:4,n:"T5",cls:"Thiết kế ứng dụng di động",j:"モバイルアプリ設計",at:"07:00",rm:"06:30"},{d:5,n:"T6",cls:"ITSS in Japanese 2",j:"ITSS in Japanese 2",at:"09:00",rm:"08:30"}];
+const DAYS=[["T2",1],["T3",2],["T4",3],["T5",4],["T6",5],["T7",6],["CN",0]];
+// 6 việc mẫu (type: n=Thông báo, d=Deadline)
+const TASKS=[
+{id:1,t:"n",vi:"Nghỉ học môn Mạng máy tính sáng thứ Hai",ja:"月曜朝のコンピュータネットワークは休講",due:["Hạn xem: trước 06:00 thứ Hai","確認期限：月曜6:00まで"],src:"Teams",who:"Thầy Hùng",more:["Lớp sẽ được học bù vào tuần sau. Thầy sẽ báo lịch cụ thể sau.","補講は来週の予定です。詳細は後日連絡があります。"]},
+{id:2,t:"n",vi:"Đổi phòng học Thực hành Lập trình mạng sang D9-301",ja:"ネットワークプログラミング実習の教室がD9-301に変更",due:["Hạn xem: trước 12:00 thứ Ba","確認期限：火曜12:00まで"],src:"Teams",who:"Cô Lan",more:["Từ tuần sau lớp học ở phòng D9-301. Các bạn nhớ đến đúng phòng mới.","来週から教室はD9-301です。新しい教室に行ってください。"]},
+{id:3,t:"d",vi:"Bài tập tuần của môn Tư tưởng Hồ Chí Minh",ja:"ホー・チ・ミン思想の週課題",due:["Hạn: 23:59 Chủ nhật","期限：日曜23:59"],src:"Teams",who:"Giảng viên",more:["Nộp bài tập tuần qua mục Assignments trên Teams.","Teamsの課題欄から提出してください。"]},
+{id:4,t:"n",vi:"Mang tai nghe cho buổi ITSS in Japanese 2",ja:"ITSS in Japanese 2に向けてヘッドホンを持参",due:["Hạn xem: trước 08:00 thứ Ba","確認期限：火曜8:00まで"],src:"Slack",who:"Giảng viên ITSS2",more:["Buổi phỏng vấn online cần tai nghe để nghe rõ.","オンライン面談のため、ヘッドホンが必要です。"]},
+{id:5,t:"d",vi:"Nộp bài tập tiếng Nhật",ja:"日本語課題の提出",due:["Hạn: 23:59 thứ Sáu","期限：金曜23:59"],src:"Slack",who:"Giảng viên ITSS2",more:["Nộp bài tập tiếng Nhật trong kênh của lớp.","日本語の課題はクラスのチャンネルに提出してください。"]},
+{id:6,t:"d",vi:"Bài tập môn Thiết kế ứng dụng di động",ja:"モバイルアプリ設計の課題",due:["Hạn: 23:59 Chủ nhật","期限：日曜23:59"],src:"Teams",who:"Giảng viên",more:["Nộp bản thiết kế và file giải thích lên Teams.","設計と説明ファイルをTeamsに提出してください。"]}];
+const WEEKS=[["Tuần 1","第1週",20],["Tuần 2","第2週",40],["Tuần 3","第3週",70]];
+const WHO={"Thầy Hùng":"フン先生","Cô Lan":"ラン先生","Giảng viên":"講師","Giảng viên ITSS2":"ITSS2の講師"};
+const AUTO_SEC=8; // số giây chờ trước khi tự sang thông báo (A3→A4)
+const LV=[0,40,80,120]; // ngưỡng XP của Lv1..Lv4
+const TEAMS=[["Thầy Hùng (Mạng máy tính)","フン先生（コンピュータネットワーク）","Sáng thứ Hai tuần sau lớp nghỉ, sẽ học bù vào tuần sau.","月曜の朝は休講、補講は来週です。"],["Cô Lan (Lập trình mạng)","ラン先生（ネットワークプログラミング）","Đổi phòng học từ tuần sau: D9-301.","来週から教室はD9-301です。"]];
+const SLACK=[["Giảng viên ITSS2","ITSS2の講師","Tuần sau nhớ mang tai nghe cho buổi phỏng vấn online.","来週のオンライン面談にヘッドホンを持参してください。"],["Giảng viên ITSS2","ITSS2の講師","Nhắc nộp bài tập tiếng Nhật trước 23:59 Chủ nhật.","日曜23:59までに日本語課題を提出してください。"]];
+
+/* ===== TRẠNG THÁI (chỉ trong bộ nhớ) ===== */
+let S,LANG="vi",CUR="S0",CDN=0; // LANG: "vi" hoặc "ja" (không bị reset khi bấm Làm lại)
+const T=(vi,ja)=>LANG=="ja"?ja:vi;
+function fresh(){S={reminders:[],draftBackup:null,slots:[{time:"20:00",days:[]}],times:["20:00"],repeat:"daily",days:[],saved:false,checkedAt:null,banner:false,xp:30,done:[],pre:4,streak:5,cur:null,last:null,tab:"Teams",after:null,fire:null};} // after: lời nhắc đã dùng xong; fire: lời nhắc đang hiện ở A4
+fresh();
+let timer=null;
+const $=id=>document.getElementById(id);
+const b=(vi,ja)=>`<span class="vi">${T(vi,ja)}</span>`;
+const cdHTML=n=>b(`Tự nhắc sau ${n} giây`,`${n}秒後に自動通知`);
+const pad=n=>String(n).padStart(2,"0");
+const hm=d=>pad(d.getHours())+":"+pad(d.getMinutes());
+const lvOf=x=>LV.filter(v=>x>=v).length;
+const resetInner=()=>`↺ ${b("Làm lại từ đầu","最初から")}`;
+// Nút "Làm lại" mặc định ẨN. Bật bằng: mở link có ?admin, hoặc chạm 3 lần vào góc trên-trái màn hình (chạm 3 lần nữa để tắt)
+let ADMIN=/[?&]admin(=|&|$)/.test(location.search),tapN=0,tapT=null;
+const resetLink=()=>ADMIN?`<div class="reset"><button onclick="resetTap(this)">${resetInner()}</button></div>`:"";
+function hid(){tapN++;clearTimeout(tapT);tapT=setTimeout(()=>tapN=0,1200);
+  if(tapN>=3){tapN=0;ADMIN=!ADMIN;re(CUR);toast(ADMIN?b("Chế độ người phỏng vấn: BẬT","インタビュアーモード：オン"):b("Chế độ người phỏng vấn: TẮT","インタビュアーモード：オフ"))}}
+let rsT=null;
+// Bấm 2 lần (trong 3 giây) để tránh lỡ tay làm mất trạng thái
+function resetTap(el){
+  if(el.dataset.arm){clearTimeout(rsT);resetAll();return}
+  el.dataset.arm=1;el.innerHTML="↺ "+b("Bấm lần nữa để xác nhận","もう一度タップして確認");
+  rsT=setTimeout(()=>{delete el.dataset.arm;el.innerHTML=resetInner()},3000);
+}
+function resetAll(){TASKS.splice(6);fresh();go("S0")}
+
+/* ===== ĐIỀU HƯỚNG ===== */
+const R={};
+function go(id){CUR=id;
+  clearInterval(timer);timer=null;
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("on"));
+  const el=$(id);el.style.animation="";el.innerHTML=R[id]()+resetLink();el.classList.add("on");window.scrollTo(0,0);
+  if(R[id+"_after"])R[id+"_after"]();
+}
+function toast(h){const t=$("toast");t.innerHTML=h;t.style.display="block";setTimeout(()=>t.style.display="none",2600)}
+// Vẽ lại màn hình hiện tại: giữ vị trí cuộn, không chạy hiệu ứng trượt
+function re(id){const y=window.scrollY,el=$(id);el.style.animation="none";el.innerHTML=R[id]()+resetLink();window.scrollTo(0,y);if(R[id+"_after"])R[id+"_after"]()}
+function setLang(l){LANG=l;document.documentElement.lang=l;document.querySelectorAll("#lang button").forEach(x=>x.classList.toggle("on",x.dataset.l==l));re(CUR)}
+const btn=(vi,ja,to,cls="")=>`<button class="btn ${cls}" onclick="${to}">${b(vi,ja)}</button>`;
+const lnk=(vi,ja,to)=>`<button class="link" onclick="${to}">${b(vi,ja)}</button>`;
+const home=()=>lnk("Về trang chủ","ホームへ","go('S0')"); // hàm, để đổi ngôn ngữ được
+
+/* S0 */
+R.S0=()=>`<div class="center big" style="margin-top:20px"><div class="art" style="font-size:64px">🌱</div>${b(APP_NAME[0],APP_NAME[1])}<div class="sm" style="margin-top:8px">${b("Không bỏ lỡ thông báo, nhẹ lòng học tập","お知らせを見逃さず、安心して学ぶ")}</div></div>
+<div class="card tap" onclick="go('A1')"><div class="ico">⏰</div><div>${b("Nhắc kiểm tra","確認リマインダー")}</div></div>
+<div class="card tap" onclick="go('B1')"><div class="ico g">📈</div><div>${b("Theo dõi tiến bộ","進捗確認")}</div></div>`;
+
+/* ---- LUỒNG A ---- */
+R.A1=()=>`<div class="sp"></div><div class="art">🕗✅</div><div class="center big">${b("Chọn giờ kiểm tra để an tâm tập trung","安心して集中するために確認時間を選ぶ")}</div><div class="sp"></div>${btn("Chọn giờ nhắc","時間を選ぶ","beginReminder()")}`;
+
+R.A2=()=>`<div class="big">${b(S.saved?"Sửa lời nhắc":"Cài lời nhắc","リマインダー設定")}</div>
+<div class="tabs"><button class="tab ${S.repeat!=='tkb'?'on':''}" onclick="S.repeat='custom';re('A2')">${T('Tự chọn giờ','時刻を指定')}</button><button class="tab ${S.repeat==='tkb'?'on':''}" onclick="S.repeat='tkb';re('A2')">${T('Theo TKB mẫu','サンプル時間割')}</button></div>
+${S.repeat==='tkb'?`<div class="card">${b('30 phút trước tiết học đầu tiên của ngày','1日の最初の授業の30分前')}${TKB.map(t=>`<div class="tt"><span>${T(t.n,'日月火水木金土'[t.d])} · ${T(t.cls,t.j)} ${t.at}</span><b>⏰ ${t.rm}</b></div>`).join('')}</div>`:`<div class="meta">${T('Mỗi mốc giờ có ngày lặp riêng. Bạn có thể thêm nhiều mốc.','時刻ごとに曜日を設定できます。複数の時刻を追加できます。')}</div>${S.slots.map((slot,i)=>`<div class="card slot"><div class="row"><label style="flex:1"><span class="meta">${T('Mốc','時刻')} ${i+1}</span><input aria-label="${T('Giờ nhắc','通知時刻')} ${i+1}" type="time" required value="${slot.time}" oninput="S.slots[${i}].time=this.value"></label>${S.slots.length>1?`<button class="x" aria-label="${T('Xóa mốc','時刻を削除')} ${i+1}" onclick="rmTime(${i})">×</button>`:''}</div><div class="chips weekdays">${DAYS.map(d=>`<button class="chip ${slot.days.includes(d[1])?'on':''}" aria-pressed="${slot.days.includes(d[1])}" onclick="togDay(${i},${d[1]})">${T(d[0],'日月火水木金土'[d[1]])}</button>`).join('')}</div><div class="quick"><button class="link" onclick="S.slots[${i}].days=[1,2,3,4,5,6,0];re('A2')">${T('Hằng ngày','毎日')}</button><button class="link" onclick="S.slots[${i}].days=[1,2,3,4,5];re('A2')">${T('T2–T6','月〜金')}</button></div></div>`).join('')}${btn('+ Thêm mốc giờ','時刻を追加','addTime()','outline')}`}
+<div class="err" id="err" role="alert"></div><div class="sp"></div>${btn('Lưu lời nhắc','保存','saveSched()')}${lnk('Quay lại','戻る',"cancelReminder()")}`;
+function beginReminder(){
+  S.draftBackup={repeat:S.repeat,slots:S.slots.map(x=>({time:x.time,days:[...x.days]})),times:[...S.times]};
+  go('A2');
+}
+function cancelReminder(){
+  if(S.draftBackup){Object.assign(S,S.draftBackup);S.draftBackup=null}
+  go(S.saved?'A3':'A1');
+}
+function addTime(){S.slots.push({time:'12:00',days:[]});re('A2')}
+function rmTime(i){if(S.slots.length>1)S.slots.splice(i,1);re('A2')}
+function togDay(i,d){const days=S.slots[i].days,index=days.indexOf(d);index<0?days.push(d):days.splice(index,1);re('A2')}
+function saveSched(){
+  if(S.repeat!=='tkb'){
+    const bad=S.slots.findIndex(x=>!/^([01]\d|2[0-3]):[0-5]\d$/.test(x.time)||!x.days.length);
+    const seen=new Set();let duplicate=false;S.slots.forEach(x=>x.days.forEach(d=>{const k=d+':'+x.time;if(seen.has(k))duplicate=true;seen.add(k)}));
+    if(bad>=0||duplicate){$('err').innerHTML=bad>=0?b(`Mốc ${bad+1}: hãy chọn giờ và ít nhất một ngày.`,`時刻${bad+1}：時刻と曜日を選択してください。`):b('Có mốc trùng giờ và ngày. Hãy điều chỉnh hoặc xóa mốc trùng.','同じ曜日・時刻が重複しています。');$('err').style.display='block';return}
+    S.repeat='custom';S.times=S.slots.map(x=>x.time);
+  }
+  S.reminders=[{repeat:S.repeat,slots:S.slots.map(x=>({time:x.time,days:[...x.days]}))}];S.draftBackup=null;
+  S.saved=true;S.checkedAt=null;S.banner=false;S.after=null;S.fire=null;S.fromSave=true;go('A3');
+}
+// Tính lần nhắc tiếp theo từ giờ thiết bị
+function nextRemind(){
+  const now=new Date(),L=[],lim=S.after&&S.after>now?S.after:now; // chỉ lấy lời nhắc SAU lời nhắc đã dùng xong
+  for(let k=0;k<15;k++){
+    const d=new Date(now);d.setDate(now.getDate()+k);const wd=d.getDay();let ts=[];
+    const reminders=S.reminders.length?S.reminders:[{repeat:S.repeat,slots:S.slots}];
+    reminders.forEach(r=>{if(r.repeat==='tkb'){const t=TKB.find(x=>x.d===wd);if(t)ts.push(t.rm)}else ts.push(...r.slots.filter(x=>x.days.includes(wd)).map(x=>x.time))});
+    ts.forEach(t=>{const[h,m]=t.split(":");const x=new Date(d);x.setHours(+h,+m,0,0);if(x>lim)L.push(x)});
+  }
+  L.sort((a,b)=>a-b);
+  const c=L[0];
+  if(!c)return{vi:"—",ja:"—",hm:"--:--",date:null};
+  const k=Math.round((new Date(c).setHours(0,0,0,0)-new Date(now).setHours(0,0,0,0))/864e5);
+  const n=DAYS.find(z=>z[1]==c.getDay())[0],nj="日月火水木金土"[c.getDay()];
+  const vi=k==0?"Hôm nay":k==1?"Ngày mai":n,ja=k==0?"今日":k==1?"明日":nj;
+  return{vi:`${vi} ${hm(c)}`,ja:`${ja} ${hm(c)}`,hm:hm(c),date:c};
+}
+function summary(){
+  const reminders=S.reminders.length?S.reminders:[{repeat:S.repeat,slots:S.slots}];
+  return ['vi','ja'].map(lang=>reminders.map(r=>r.repeat==='tkb'?(lang==='vi'?'30 phút trước tiết đầu · TKB mẫu':'最初の授業の30分前・サンプル時間割'):r.slots.map(x=>`${x.time} · ${x.days.length===7?(lang==='vi'?'Hằng ngày':'毎日'):DAYS.filter(d=>x.days.includes(d[1])).map(d=>lang==='vi'?d[0]:'日月火水木金土'[d[1]]).join(', ')}`).join(' / ')).join(' / '));
+}
+R.A3=()=>{
+  const d=new Date(),wd=["CN","T2","T3","T4","T5","T6","T7"][d.getDay()];
+  const nx=nextRemind(),sm=summary(),ok=!!S.checkedAt;
+  const cd=timer!==null||(S.fromSave&&!ok);
+  return `${S.banner?`<div class="banner">${b(`Bạn đã kiểm tra xong. Lần nhắc tiếp theo: ${nx.vi}. Bây giờ bạn có thể yên tâm làm việc khác.`,`確認完了です。次回のリマインドは${nx.ja}。今は安心して他のことに集中できます。`)}</div>`:""}
+<div class="big">${b("Hôm nay","今日")}<div class="sm" style="margin-top:4px">${b(`${wd}, ${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`,`${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日（${"日月火水木金土"[d.getDay()]}）`)}</div></div>
+<div class="card">${b("Lời nhắc đã lưu","保存したリマインダー")}<div style="margin-top:8px"><span class="vi" style="color:var(--blue)">${T(sm[0],sm[1])}</span></div></div>
+<div class="card">${b("Lần nhắc tiếp theo","次回リマインド")}<div style="margin-top:8px"><span class="vi" style="color:var(--blue)">${T(nx.vi,nx.ja)}</span></div></div>
+<div class="card status ${ok?"ok":""}"><div class="ico ${ok?"g":""}" style="width:48px;height:48px;font-size:26px">${ok?"✅":"💤"}</div><div>${ok?b(`Đã kiểm tra lúc ${S.checkedAt}`,`${S.checkedAt}に確認済み`):b("Chưa kiểm tra","未確認")}</div></div>
+${btn("Kiểm tra ngay","今すぐ確認","go('A5')")}
+${lnk("Sửa lời nhắc","リマインダーを編集","beginReminder()")}${ok?home():""}
+<div class="sim">${cd?`<div id="cd">${cdHTML(timer!==null?CDN:AUTO_SEC)}</div>`:`<div style="font-size:11px;color:var(--sub)">${b("Mô phỏng","シミュレーション")}</div>`}<button onclick="go('A4')">${b("Giả lập đến giờ","時刻になったことにする")}</button></div>`;
+};
+R.A3_after=()=>{
+  if(S.fromSave&&!S.checkedAt){
+    CDN=AUTO_SEC;timer=setInterval(()=>{CDN--;const c=$("cd");if(c)c.innerHTML=cdHTML(CDN);if(CDN<=0)go("A4")},1000);
+  }
+  S.fromSave=false; // vào lại từ A5 không đếm ngược lại
+};
+R.A4=()=>{
+  // Đồng hồ giả: hiển thị đúng giờ của lời nhắc sắp tới (không dùng giờ thật của máy)
+  const up=nextRemind(),at=up.date||new Date();S.fire=up.date||null;
+  const ts=S.repeat=="tkb"?`${T("TKB mẫu","サンプル時間割")} · ${hm(at)}`:hm(at);
+  return `<div class="clock">${hm(at)}</div><div class="date">${at.getDate()}/${at.getMonth()+1}</div>
+<div class="notif" onclick="go('A5')"><div class="nh"><span style="font-size:20px">🌱</span><b>${T(APP_NAME[0],APP_NAME[1])}</b><span>${b("bây giờ","今")}</span></div>
+${b("Đến giờ kiểm tra Teams / Slack","TeamsとSlackを確認する時間です")}<span class="ja">⏰ ${ts}</span></div>
+<div class="hint">${b("Chạm vào lời nhắc","通知をタップ")}</div>`;
+};
+R.A5=()=>{
+  const L=S.tab==='Teams'?TEAMS:SLACK;
+  return `<div class="big">${b('Kiểm tra kênh của bạn','チャンネルを確認')}</div>
+<div class="card"><div class="channel-step"><div class="ico">1</div><div>${b('Tự mở Teams và Slack','TeamsとSlackを開く')}</div></div><p class="meta" style="line-height:1.7">${T('Xem thông báo và bài tập trong hai kênh bạn đang sử dụng. Sau đó quay lại đây để xác nhận.','利用中の両チャンネルで通知や課題を確認し、その後ここに戻って確認済みにしてください。')}</p><div class="channel-step"><div class="ico g">2</div><div>${b('Quay lại bấm “Đã kiểm tra”','戻って「確認済み」をタップ')}</div></div></div>
+<details class="sample-preview"><summary>${T('Trải nghiệm thử với nội dung mẫu','サンプル内容で体験する')}</summary><div class="meta" style="margin-bottom:12px">${T('Nội dung mô phỏng, không kết nối với tài khoản Teams/Slack của bạn.','模擬コンテンツです。Teams/Slackアカウントには接続されていません。')}</div>
+<div class="tabs"><button class="tab ${S.tab==='Teams'?'on':''}" onclick="previewTab('Teams')">Teams</button><button class="tab ${S.tab==='Slack'?'on':''}" onclick="previewTab('Slack')">Slack</button></div>
+<div class="card">${L.map(m=>`<div class="msg"><div class="av">👤</div><div><b>${T(m[0],m[1])}</b><p>${T(m[2],m[3])}</p></div></div>`).join('')}</div></details>
+<div class="sp"></div>${btn('Đã kiểm tra','確認済み','doneCheck()','g')}${lnk('Quay lại','戻る',"S.fire=null;go('A3')")}`;
+};
+function previewTab(tab){S.tab=tab;re('A5');$('A5').querySelector('details').open=true}
+function doneCheck(){
+  if(S.fire){S.after=S.fire;S.checkedAt=hm(S.fire);S.fire=null} // đi qua thông báo: lời nhắc đó đã dùng xong
+  else S.checkedAt=hm(new Date()); // tự kiểm tra sớm ("Kiểm tra ngay"): lời nhắc sắp tới vẫn giữ nguyên
+  S.banner=true;S.fromSave=false;go("A3")}
+
+/* ---- LUỒNG B ---- */
+R.B1=()=>`<div class="sp"></div><div class="art">🌱</div><div class="center big">${b("Mỗi việc chủ động là một bước tiến","一つの行動が一歩の進歩")}</div><div class="sp"></div>${btn("Xem việc mẫu / thêm việc","サンプル・タスク追加","go('B2')","g")}`;
+R.B2=()=>{
+  const all=S.done.length==TASKS.length;
+  return `<div class="big">${b("Thông báo + deadline","通知＋締切")}<span class="ja">${all?"":T("Chọn việc","タスクを選ぶ")}</span></div>
+${all?`<div class="banner center">${b("Bạn đã xử lý hết các việc!","すべてのタスクを処理しました！")}</div>`:""}
+${btn("+ Thêm việc","タスクを追加","go('BNEW')","g")}
+${[true,false].map(custom=>{const tasks=TASKS.filter(t=>!!t.custom===custom);return `<h3 class="group-title">${custom?T('Việc bạn thêm','自分で追加したタスク'):T('Việc mẫu','サンプルタスク')} · ${tasks.length}</h3>${tasks.length?tasks.map(t=>{const dn=S.done.includes(t.id);return `<div class="card task ${dn?"done":""}" onclick="pick(${t.id})">
+<span class="tag ${t.t=="d"?"d":""}">${t.t=="d"?T("Deadline","締切"):T("Thông báo","通知")}</span> ${dn?`<span class="tag d">✔ ${T("Đã xử lý","処理済み")}</span>`:`<span class="tag n">○ ${T("Chưa xử lý","未処理")}</span>`}
+<div style="margin-top:8px">${b(t.vi,t.ja)}</div><div class="meta">${T(t.due[0],t.due[1])}<br>${t.src} · ${t.custom?T("Tự nhập","自分で追加"):T("Mẫu","サンプル")}</div></div>`}).join(''):`<div class="meta" style="padding:4px 2px 10px">${T('Chưa có việc tự thêm. Nhấn “Thêm việc” để bắt đầu.','追加したタスクはありません。「タスクを追加」から始めましょう。')}</div>`}`}).join('')}
+${lnk("Xem tiến bộ","進捗を見る","go('B5')")}`;
+};
+function pick(id){
+  if(S.done.includes(id)){toast(b("Việc này đã được ghi nhận, không nhận thêm XP","このタスクは記録済みです。XPは再取得できません"));return}
+  S.cur=id;go("B3");
+}
+R.B3=()=>{
+  const t=TASKS.find(x=>x.id==S.cur),d=t.t=="d";
+  return `<div><span class="tag ${d?"d":""}">${d?T("Deadline","締切"):T("Thông báo","通知")}</span></div>
+<div class="big">${b(t.vi,t.ja)}</div>
+<div class="card">${b(t.more[0],t.more[1])}<div class="meta" style="font-size:13px;margin-top:12px">⏳ ${T(t.due[0],t.due[1])}<br>💬 ${t.src} · ${T(t.who,WHO[t.who]||t.who)}</div></div>
+<div class="sp"></div>${btn(d?"Hoàn thành":"Đã xử lý",d?"完了":"処理済み","finish()","g")}${lnk("Quay lại","戻る","go('B2')")}`;
+};
+function finish(){
+  if(S.done.includes(S.cur))return go("B2"); // mỗi việc chỉ +10 XP một lần
+  const oldLv=lvOf(S.xp),oldPre=S.pre;
+  S.done.push(S.cur);S.xp+=10;S.pre+=1;if(S.streak<6&&S.done.length==1)S.streak=6;
+  S.last={lvUp:lvOf(S.xp)>oldLv,lv:lvOf(S.xp),badge:oldPre<5&&S.pre>=5,from:S.xp-10};
+  go("B4");
+}
+function bar(x){return Math.min(100,Math.round(x/LV[3]*100))} // theo tổng XP, không bao giờ chạy lùi
+R.B4=()=>`<div class="sp"></div><div class="check">✓</div><div class="xp">+10 XP</div>
+<div class="center">${b("Bạn vừa tiến thêm một bước!","一歩前進しました！")}</div>
+<div class="card"><div class="meta" style="margin:0 0 6px">${b("XP tuần này","今週のXP")}</div><div class="bar"><div class="fill" id="bf" style="width:${bar(S.last.from)}%"></div></div><div class="meta">${S.xp} XP</div></div>
+${S.last.lvUp?`<div class="banner center">${b(`Lên cấp ${S.last.lv} tuần này!`,`今週レベル${S.last.lv}！`)}</div>`:""}
+${S.last.badge?`<div class="card badge"><div class="ico g">🏅</div><div>${b("Xử lý trước hạn 5 lần","期限前に5回処理")}<span class="ja">${T("Huy hiệu mới!","新しいバッジ！")}</span></div></div>`:""}
+<div class="sp"></div>${btn("Xem tiến bộ","進捗を見る","go('B5')","g")}`;
+R.B4_after=()=>setTimeout(()=>{const f=$("bf");if(f)f.style.width=bar(S.xp)+"%"},300);
+R.B5=()=>{
+  const l=lvOf(S.xp),nxt=l<4?LV[l]:null,data=WEEKS.concat([["Tuần này","今週",S.xp]]),mx=Math.max(100,S.xp);
+  return `<div class="big">${b("Tiến bộ","進捗確認")}</div>
+<div class="card"><h3>${b("XP + cấp tuần này","今週のXP＋レベル")}</h3><div style="font-size:30px;font-weight:800;color:var(--green)">${S.xp} XP <span style="font-size:16px;color:var(--blue)">Lv${l}</span></div><div class="bar" style="margin:8px 0"><div class="fill" style="width:${bar(S.xp)}%"></div></div><div class="meta">${nxt?`Lv${l+1}: ${nxt} XP`:T("Lv tối đa","最高レベル")}</div></div>
+<div class="card"><h3>${b("So sánh các tuần mẫu","サンプル週の比較")}</h3><div class="chart">${data.map((w,i)=>`<div class="col ${i==3?"me":""}"><b>${w[2]}</b><i style="height:${w[2]/mx*100}px"></i>${T(w[0],w[1])}</div>`).join("")}</div></div>
+<div class="card"><h3>${b("Huy hiệu + điều kiện","バッジ＋条件")}</h3>
+${badge("🏅","Xử lý trước hạn 5 lần","期限前に5回処理",S.pre,5,["lần","回"])}${badge("🔥","Không lỡ việc 7 ngày liên tiếp","7日連続で見逃しなし",S.streak,7,["ngày","日"])}</div>
+${btn("Về danh sách","一覧へ","go('B2')","g")}${home()}`;
+};
+function badge(ic,vi,ja,v,n,u){const ok=v>=n;return `<div class="badge ${ok?"":"lock"}"><div class="ico ${ok?"g":""}">${ok?ic:"🔒"}</div><div style="flex:1">${b(vi,ja)}<div class="bar" style="height:8px;margin-top:6px"><div class="fill" style="width:${Math.min(100,v/n*100)}%"></div></div><div class="meta" style="margin:2px 0 0">${Math.min(v,n)}/${n} ${T(u[0],u[1])}</div></div></div>`}
+
+
+const escapeHTML=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+R.BNEW=()=>`<div class="big">${b('Thêm việc của bạn','自分のタスクを追加')}</div><form class="card task-form" onsubmit="createTask(event)">
+<label>${T('Loại việc','種類')}<select name="type"><option value="n">${T('Thông báo','通知')}</option><option value="d">Deadline</option></select></label>
+<label>${T('Tiêu đề','タイトル')}<input name="title" maxlength="160" required placeholder="${T('VD: Nộp bài tiếng Nhật','例：日本語課題の提出')}"></label>
+<label>${T('Nội dung','内容')}<textarea name="content" maxlength="2000" rows="4" required></textarea></label>
+<label>${T('Hạn xử lý','期限')}<input name="deadline" type="datetime-local" required></label>
+<label>${T('Nguồn','情報源')}<select name="source"><option>Teams</option><option>Slack</option><option>${T('Khác','その他')}</option></select></label>
+<label>${T('Người gửi (không bắt buộc)','送信者（任意）')}<input name="sender" maxlength="80"></label>
+<div class="err" id="task-error" role="alert"></div><button class="btn g" type="submit">${b('Lưu việc','保存')}</button></form>${lnk('Hủy','キャンセル',"go('B2')")}`;
+function createTask(event){event.preventDefault();const f=new FormData(event.target),title=f.get('title').trim(),content=f.get('content').trim(),deadline=f.get('deadline');if(!title||!content||!Number.isFinite(new Date(deadline).getTime())){$('task-error').textContent=T('Hãy nhập tiêu đề, nội dung và hạn hợp lệ.','タイトル・内容・有効な期限を入力してください。');$('task-error').style.display='block';return}
+const date=new Date(deadline),due=[`Hạn: ${date.toLocaleString('vi-VN')}`,`期限：${date.toLocaleString('ja-JP')}`],id=Math.max(...TASKS.map(t=>t.id))+1;
+TASKS.push({id,t:f.get('type'),vi:escapeHTML(title),ja:escapeHTML(title),more:[escapeHTML(content),escapeHTML(content)],due,deadline,src:escapeHTML(f.get('source')),who:escapeHTML(f.get('sender').trim()||T('Bạn','自分')),custom:true});go('B2');}
+
+/* ===== KHỞI TẠO ===== */
+$("app").innerHTML=`<div id="hid" onclick="hid()"></div><div id="lang"><button data-l="vi" class="on" onclick="setLang('vi')">VI</button><button data-l="ja" onclick="setLang('ja')">日本語</button></div>`+["S0","A1","A2","A3","A4","A5","B1","B2","B3","B4","B5","BNEW"].map(i=>`<section class="screen" id="${i}"></section>`).join("");
+go("S0");
+</script></body></html>
